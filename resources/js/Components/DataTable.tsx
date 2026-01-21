@@ -104,40 +104,42 @@ export default function DataTable<T>({
 
     return (
         <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-            <Table>
-                {caption && <TableCaption>{caption}</TableCaption>}
-                <TableHeader>
-                    <TableRow>
-                        {columns.map((column) => (
-                            <TableHead key={column.key} className={column.className}>
-                                {column.header}
-                            </TableHead>
-                        ))}
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {isLoading ? (
+            <div className="w-full overflow-x-auto">
+                <Table className="min-w-full">
+                    {caption && <TableCaption>{caption}</TableCaption>}
+                    <TableHeader>
                         <TableRow>
-                            <TableCell colSpan={columns.length}>
-                                <div className="flex items-center justify-center gap-2 py-6 text-muted-foreground">
-                                    <Spinner />
-                                    <span>Loading...</span>
-                                </div>
-                            </TableCell>
+                            {columns.map((column) => (
+                                <TableHead key={column.key} className={column.className}>
+                                    {column.header}
+                                </TableHead>
+                            ))}
                         </TableRow>
-                    ) : (
-                        data.map((row, rowIndex) => (
-                            <TableRow key={rowIndex}>
-                                {columns.map((column) => (
-                                    <TableCell key={column.key} className={column.className}>
-                                        {column.render ? column.render(row) : (row as any)[column.key]}
-                                    </TableCell>
-                                ))}
+                    </TableHeader>
+                    <TableBody>
+                        {isLoading ? (
+                            <TableRow>
+                                <TableCell colSpan={columns.length}>
+                                    <div className="flex items-center justify-center gap-2 py-6 text-muted-foreground">
+                                        <Spinner />
+                                        <span>Loading...</span>
+                                    </div>
+                                </TableCell>
                             </TableRow>
-                        ))
-                    )}
-                </TableBody>
-            </Table>
+                        ) : (
+                            data.map((row, rowIndex) => (
+                                <TableRow key={rowIndex}>
+                                    {columns.map((column) => (
+                                        <TableCell key={column.key} className={column.className}>
+                                            {column.render ? column.render(row) : (row as any)[column.key]}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
             {pagination && <Pagination {...pagination} />}
         </div>
     );
