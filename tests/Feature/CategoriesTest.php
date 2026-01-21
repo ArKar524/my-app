@@ -30,7 +30,12 @@ test('category can be created', function () {
 });
 
 test('category can be updated', function () {
-    $category = Category::factory()->create(['name' => 'Old', 'type' => 'expense', 'created_by' => $this->user->id]);
+    $category = Category::factory()->create([
+        'name' => 'Old',
+        'type' => 'expense',
+        'user_id' => $this->user->id,
+        'created_by' => $this->user->id,
+    ]);
 
     $response = $this->actingAs($this->user)->put(route('categories.update', $category), [
         'name' => 'New',
@@ -46,7 +51,10 @@ test('category can be updated', function () {
 });
 
 test('category can be deleted', function () {
-    $category = Category::factory()->create(['created_by' => $this->user->id]);
+    $category = Category::factory()->create([
+        'user_id' => $this->user->id,
+        'created_by' => $this->user->id,
+    ]);
 
     $response = $this->actingAs($this->user)->delete(route('categories.destroy', $category));
 

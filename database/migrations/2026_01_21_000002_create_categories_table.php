@@ -11,11 +11,13 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->enum('type', ['income', 'expense']);
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamps();
 
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->foreign('created_by')->references('id')->on('users')->nullOnDelete();
-            $table->unique(['name', 'type', 'created_by']);
+            $table->unique(['name', 'type', 'user_id']);
         });
     }
 

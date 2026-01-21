@@ -9,17 +9,22 @@ use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['email_verified_at' => now()]);
-    $this->accounts = Account::factory()->count(2)->create(['created_by' => $this->user->id]);
+    $this->accounts = Account::factory()->count(2)->create([
+        'user_id' => $this->user->id,
+        'created_by' => $this->user->id,
+    ]);
     $this->accounts->each(function (Account $account) {
         $account->update(['opening_balance' => 0, 'current_balance' => 0]);
     });
     $this->incomeCategory = Category::factory()->create([
         'type' => 'income',
         'created_by' => $this->user->id,
+        'user_id' => $this->user->id,
     ]);
     $this->expenseCategory = Category::factory()->create([
         'type' => 'expense',
         'created_by' => $this->user->id,
+        'user_id' => $this->user->id,
     ]);
     $this->service = app(TransactionService::class);
 });

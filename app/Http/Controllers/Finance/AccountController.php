@@ -7,6 +7,7 @@ use App\Domains\Finance\Services\ActivityLogService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Finance\StoreAccountRequest;
 use App\Http\Requests\Finance\UpdateAccountRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -21,6 +22,7 @@ class AccountController extends Controller
     public function index(Request $request): Response
     {
         $accounts = Account::query()
+            ->where('user_id', Auth::id())
             ->orderBy('name')
             ->paginate(10)
             ->through(function (Account $account) {
@@ -45,6 +47,8 @@ class AccountController extends Controller
     {
         $data = $request->validated();
         $data['current_balance'] = $data['opening_balance'] ?? 0;
+        $data['user_id'] = Auth::id();
+        $data['created_by'] = Auth::id();
 
         $account = Account::create($data);
         $this->activityLog->log('account.created', $account);

@@ -33,7 +33,11 @@ test('account can be created', function () {
 });
 
 test('account can be updated', function () {
-    $account = Account::factory()->create(['name' => 'Old Name', 'created_by' => $this->user->id]);
+    $account = Account::factory()->create([
+        'name' => 'Old Name',
+        'user_id' => $this->user->id,
+        'created_by' => $this->user->id,
+    ]);
 
     $response = $this->actingAs($this->user)->put(route('accounts.update', $account), [
         'name' => 'New Name',
@@ -50,7 +54,10 @@ test('account can be updated', function () {
 });
 
 test('account can be deleted', function () {
-    $account = Account::factory()->create(['created_by' => $this->user->id]);
+    $account = Account::factory()->create([
+        'user_id' => $this->user->id,
+        'created_by' => $this->user->id,
+    ]);
 
     $response = $this->actingAs($this->user)->delete(route('accounts.destroy', $account));
 

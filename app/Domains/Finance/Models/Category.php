@@ -14,12 +14,16 @@ class Category extends Model
     protected $fillable = [
         'name',
         'type',
+        'user_id',
         'created_by',
     ];
 
     protected static function booted(): void
     {
         static::creating(function (Category $category): void {
+            if (!$category->user_id && Auth::id()) {
+                $category->user_id = Auth::id();
+            }
             if (!$category->created_by && Auth::id()) {
                 $category->created_by = Auth::id();
             }
@@ -28,7 +32,7 @@ class Category extends Model
 
     public function owner(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class, 'created_by');
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
 
     protected static function newFactory()

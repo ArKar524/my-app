@@ -17,6 +17,7 @@ class Account extends Model
         'currency_code',
         'opening_balance',
         'current_balance',
+        'user_id',
         'created_by',
     ];
 
@@ -32,6 +33,9 @@ class Account extends Model
                 $account->current_balance = $account->opening_balance ?? 0;
             }
 
+            if (!$account->user_id && Auth::id()) {
+                $account->user_id = Auth::id();
+            }
             if (!$account->created_by && Auth::id()) {
                 $account->created_by = Auth::id();
             }
@@ -40,7 +44,7 @@ class Account extends Model
 
     public function owner(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class, 'created_by');
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
 
     protected static function newFactory()

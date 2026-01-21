@@ -14,10 +14,13 @@ return new class extends Migration {
             $table->string('currency_code', 3)->default('USD');
             $table->decimal('opening_balance', 14, 2)->default(0);
             $table->decimal('current_balance', 14, 2)->default(0);
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamps();
 
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->foreign('created_by')->references('id')->on('users')->nullOnDelete();
+            $table->index(['user_id']);
             $table->index(['created_by']);
         });
     }
