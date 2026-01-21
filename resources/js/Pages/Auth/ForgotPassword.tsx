@@ -3,13 +3,19 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, useForm } from '@inertiajs/react';
+import type { FormEventHandler } from 'react';
+import type { PageProps } from '@/types';
 
-export default function ForgotPassword({ status }) {
-    const { data, setData, post, processing, errors } = useForm({
+export default function ForgotPassword({
+    status,
+}: PageProps<{ status?: string }>) {
+    const { data, setData, post, processing, errors } = useForm<{
+        email: string;
+    }>({
         email: '',
     });
 
-    const submit = (e) => {
+    const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
         post(route('password.email'));
@@ -19,7 +25,7 @@ export default function ForgotPassword({ status }) {
         <GuestLayout>
             <Head title="Forgot Password" />
 
-            <div className="mb-4 text-sm text-gray-600">
+            <div className="mb-4 text-sm text-muted-foreground">
                 Forgot your password? No problem. Just let us know your email
                 address and we will email you a password reset link that will
                 allow you to choose a new one.

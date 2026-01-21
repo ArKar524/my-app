@@ -4,16 +4,29 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, useForm } from '@inertiajs/react';
+import type { FormEventHandler } from 'react';
+import type { PageProps } from '@/types';
 
-export default function ResetPassword({ token, email }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        token: token,
-        email: email,
-        password: '',
-        password_confirmation: '',
-    });
+type ResetPasswordForm = {
+    token: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+};
 
-    const submit = (e) => {
+export default function ResetPassword({
+    token,
+    email,
+}: PageProps<{ token: string; email: string }>) {
+    const { data, setData, post, processing, errors, reset } =
+        useForm<ResetPasswordForm>({
+            token,
+            email,
+            password: '',
+            password_confirmation: '',
+        });
+
+    const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
         post(route('password.store'), {

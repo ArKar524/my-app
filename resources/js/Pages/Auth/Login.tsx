@@ -5,15 +5,30 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
+import type { FormEventHandler } from 'react';
+import type { PageProps } from '@/types';
 
-export default function Login({ status, canResetPassword }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
-        password: '',
-        remember: false,
-    });
+type LoginForm = {
+    email: string;
+    password: string;
+    remember: boolean;
+};
 
-    const submit = (e) => {
+export default function Login({
+    status,
+    canResetPassword,
+}: PageProps<{
+    status?: string;
+    canResetPassword: boolean;
+}>) {
+    const { data, setData, post, processing, errors, reset } =
+        useForm<LoginForm>({
+            email: '',
+            password: '',
+            remember: false,
+        });
+
+    const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
         post(route('login'), {
@@ -74,7 +89,7 @@ export default function Login({ status, canResetPassword }) {
                                 setData('remember', e.target.checked)
                             }
                         />
-                        <span className="ms-2 text-sm text-gray-600">
+                        <span className="ms-2 text-sm text-muted-foreground">
                             Remember me
                         </span>
                     </label>
@@ -84,7 +99,7 @@ export default function Login({ status, canResetPassword }) {
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            className="rounded-md text-sm text-muted-foreground underline hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                         >
                             Forgot your password?
                         </Link>

@@ -4,11 +4,11 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Transition } from '@headlessui/react';
 import { useForm } from '@inertiajs/react';
-import { useRef } from 'react';
+import { useRef, type FormEventHandler } from 'react';
 
-export default function UpdatePasswordForm({ className = '' }) {
-    const passwordInput = useRef();
-    const currentPasswordInput = useRef();
+export default function UpdatePasswordForm({ className = '' }: { className?: string }) {
+    const passwordInput = useRef<HTMLInputElement | null>(null);
+    const currentPasswordInput = useRef<HTMLInputElement | null>(null);
 
     const {
         data,
@@ -18,13 +18,17 @@ export default function UpdatePasswordForm({ className = '' }) {
         reset,
         processing,
         recentlySuccessful,
-    } = useForm({
+    } = useForm<{
+        current_password: string;
+        password: string;
+        password_confirmation: string;
+    }>({
         current_password: '',
         password: '',
         password_confirmation: '',
     });
 
-    const updatePassword = (e) => {
+    const updatePassword: FormEventHandler = (e) => {
         e.preventDefault();
 
         put(route('password.update'), {
@@ -33,12 +37,12 @@ export default function UpdatePasswordForm({ className = '' }) {
             onError: (errors) => {
                 if (errors.password) {
                     reset('password', 'password_confirmation');
-                    passwordInput.current.focus();
+                    passwordInput.current?.focus();
                 }
 
                 if (errors.current_password) {
                     reset('current_password');
-                    currentPasswordInput.current.focus();
+                    currentPasswordInput.current?.focus();
                 }
             },
         });
@@ -47,11 +51,11 @@ export default function UpdatePasswordForm({ className = '' }) {
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">
+                <h2 className="text-lg font-medium text-foreground">
                     Update Password
                 </h2>
 
-                <p className="mt-1 text-sm text-gray-600">
+                <p className="mt-1 text-sm text-muted-foreground">
                     Ensure your account is using a long, random password to stay
                     secure.
                 </p>
@@ -131,7 +135,7 @@ export default function UpdatePasswordForm({ className = '' }) {
                         leave="transition ease-in-out"
                         leaveTo="opacity-0"
                     >
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                             Saved.
                         </p>
                     </Transition>

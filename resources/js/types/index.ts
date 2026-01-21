@@ -1,6 +1,5 @@
 import type { PageProps as InertiaPageProps } from '@inertiajs/core';
-import route from 'ziggy-js';
-import type { Ziggy } from 'ziggy-js';
+import { route as ziggyRoute, type Config as ZiggyConfig } from 'ziggy-js';
 
 export type User = {
     id: number;
@@ -11,9 +10,9 @@ export type User = {
 
 export type SharedProps = {
     auth: {
-        user: User;
+        user?: User | null;
     };
-    ziggy: Ziggy;
+    ziggy: ZiggyConfig;
     flash?: {
         status?: string;
         message?: string;
@@ -27,7 +26,7 @@ export type PageProps<
 declare global {
     // Provided by Ziggy's @routes helper
     // eslint-disable-next-line no-var
-    var route: typeof route;
+    var route: typeof ziggyRoute;
 }
 
 export {};
