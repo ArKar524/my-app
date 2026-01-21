@@ -2,7 +2,9 @@ import type { PropsWithChildren, ReactNode } from 'react';
 import { Input } from '@/Components/ui/input';
 import { Select } from '@/Components/ui/select';
 import { Button } from '@/Components/ui/button';
+import { DatePicker } from '@/Components/ui/date-picker';
 import { cn } from '@/lib/utils';
+import { parseISO } from 'date-fns';
 
 type FilterBarProps = PropsWithChildren<{
     actions?: ReactNode;
@@ -32,22 +34,37 @@ type DateRangeProps = {
 };
 
 export function DateRangeFilter({ from, to, onChange }: DateRangeProps) {
+    const fromDate = from ? parseISO(from) : undefined;
+    const toDate = to ? parseISO(to) : undefined;
+
     return (
         <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-foreground">
                 Date range
             </label>
-            <div className="flex items-center gap-2">
-                <Input
-                    type="date"
-                    value={from}
-                    onChange={(e) => onChange({ from: e.target.value, to })}
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <DatePicker
+                    value={fromDate}
+                    onChange={(date) =>
+                        onChange({
+                            from: date ? date.toISOString().slice(0, 10) : '',
+                            to,
+                        })
+                    }
+                    placeholder="From"
                 />
-                <span className="text-sm text-muted-foreground">to</span>
-                <Input
-                    type="date"
-                    value={to}
-                    onChange={(e) => onChange({ from, to: e.target.value })}
+                <span className="text-sm text-muted-foreground text-center sm:px-1">
+                    to
+                </span>
+                <DatePicker
+                    value={toDate}
+                    onChange={(date) =>
+                        onChange({
+                            from,
+                            to: date ? date.toISOString().slice(0, 10) : '',
+                        })
+                    }
+                    placeholder="To"
                 />
             </div>
         </div>
