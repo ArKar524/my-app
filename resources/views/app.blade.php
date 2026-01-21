@@ -3,8 +3,11 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#b91c1c">
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <link rel="manifest" href="/manifest.webmanifest">
+        <link rel="icon" href="/storage/logo.png">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
