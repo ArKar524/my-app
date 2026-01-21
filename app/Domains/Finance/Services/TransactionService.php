@@ -5,12 +5,17 @@ namespace App\Domains\Finance\Services;
 use App\Domains\Finance\Enums\TransactionType;
 use App\Domains\Finance\Models\Account;
 use App\Domains\Finance\Models\Transaction;
+use App\Domains\Finance\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 class TransactionService
 {
+    public function __construct(private readonly ActivityLogService $activityLog)
+    {
+    }
+
     public function create(array $data): Transaction
     {
         return DB::transaction(function () use ($data) {
@@ -21,6 +26,10 @@ class TransactionService
             ]);
 
             $this->applyBalanceEffect($transaction, 'add');
+            $this->activityLog->log('transaction.created', $transaction, null, [
+                'type' => $transaction->type->value,
+                'amount' => $transaction->amount,
+            ]);
 
             return $transaction;
         });
@@ -36,6 +45,10 @@ class TransactionService
             $transaction->refresh();
 
             $this->applyBalanceEffect($transaction, 'add');
+            $this->activityLog->log('transaction.updated', $transaction, null, [
+                'type' => $transaction->type->value,
+                'amount' => $transaction->amount,
+            ]);
 
             return $transaction;
         });
@@ -46,6 +59,7 @@ class TransactionService
         DB::transaction(function () use ($transaction) {
             $this->applyBalanceEffect($transaction, 'remove');
             $transaction->delete();
+            $this->activityLog->log('transaction.deleted', $transaction);
         });
     }
 

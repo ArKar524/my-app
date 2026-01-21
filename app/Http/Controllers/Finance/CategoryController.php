@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Finance;
 
 use App\Domains\Finance\Models\Category;
+use App\Domains\Finance\Services\ActivityLogService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Finance\StoreCategoryRequest;
 use App\Http\Requests\Finance\UpdateCategoryRequest;
@@ -13,6 +14,10 @@ use Inertia\Response;
 
 class CategoryController extends Controller
 {
+    public function __construct(private readonly ActivityLogService $activityLog)
+    {
+    }
+
     public function index(Request $request): Response
     {
         $categories = Category::query()
@@ -33,7 +38,8 @@ class CategoryController extends Controller
 
     public function store(StoreCategoryRequest $request): RedirectResponse
     {
-        Category::create($request->validated());
+        $category = Category::create($request->validated());
+        $this->activityLog->log('category.created', $category);
 
         return redirect()
             ->route('categories.index')
@@ -46,6 +52,7 @@ class CategoryController extends Controller
         Category $category,
     ): RedirectResponse {
         $category->update($request->validated());
+        $this->activityLog->log('category.updated', $category);
 
         return redirect()
             ->route('categories.index')
@@ -56,6 +63,7 @@ class CategoryController extends Controller
     public function destroy(Category $category): RedirectResponse
     {
         $category->delete();
+        $this->activityLog->log('category.deleted', $category);
 
         return redirect()
             ->route('categories.index')

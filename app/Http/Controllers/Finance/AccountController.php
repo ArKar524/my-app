@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Finance;
 
 use App\Domains\Finance\Models\Account;
+use App\Domains\Finance\Services\ActivityLogService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Finance\StoreAccountRequest;
 use App\Http\Requests\Finance\UpdateAccountRequest;
@@ -13,6 +14,10 @@ use Inertia\Response;
 
 class AccountController extends Controller
 {
+    public function __construct(private readonly ActivityLogService $activityLog)
+    {
+    }
+
     public function index(Request $request): Response
     {
         $accounts = Account::query()
@@ -41,7 +46,8 @@ class AccountController extends Controller
         $data = $request->validated();
         $data['current_balance'] = $data['opening_balance'] ?? 0;
 
-        Account::create($data);
+        $account = Account::create($data);
+        $this->activityLog->log('account.created', $account);
 
         return redirect()
             ->route('accounts.index')
@@ -54,6 +60,7 @@ class AccountController extends Controller
         Account $account,
     ): RedirectResponse {
         $account->update($request->validated());
+        $this->activityLog->log('account.updated', $account);
 
         return redirect()
             ->route('accounts.index')
@@ -64,6 +71,7 @@ class AccountController extends Controller
     public function destroy(Account $account): RedirectResponse
     {
         $account->delete();
+        $this->activityLog->log('account.deleted', $account);
 
         return redirect()
             ->route('accounts.index')

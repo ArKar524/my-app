@@ -31,6 +31,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('accounts.statement');
     Route::resource('transactions', \App\Http\Controllers\Finance\TransactionController::class)
         ->only(['index', 'store', 'update', 'destroy']);
+    Route::get('reports', [\App\Http\Controllers\Finance\ReportController::class, 'index'])
+        ->name('reports.index');
 });
 
 require __DIR__.'/auth.php';
