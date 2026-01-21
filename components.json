@@ -12,6 +12,7 @@
     "framework": "react",
     "aliases": {
         "components": "@/Components",
-        "utils": "@/lib/utils"
+        "utils": "@/lib/utils",
+        "ui": "@/Components/ui"
     }
 }
