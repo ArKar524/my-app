@@ -211,11 +211,11 @@ export default function ReportsIndex() {
                                     form.setData('account_id', value ? Number(value) : '')
                                 }
                             >
-                                <SelectTrigger>
+                                <SelectTrigger id='accounts'>
                                     <SelectValue placeholder="All accounts" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="">All accounts</SelectItem>
+                                    <SelectItem value="all">All accounts</SelectItem>
                                     {accounts.map((acc) => (
                                         <SelectItem key={acc.id} value={String(acc.id)}>
                                             {acc.name}
