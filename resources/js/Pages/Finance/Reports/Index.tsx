@@ -3,9 +3,16 @@ import { Head, router, useForm, usePage } from '@inertiajs/react';
 import type { PageProps } from '@/types';
 import DataTable, { type DataTableColumn } from '@/Components/DataTable';
 import { Badge } from '@/Components/ui/badge';
-import { FilterActions, FilterBar, DateRangeFilter, SelectFilter } from '@/Components/FilterBar';
+import { FilterActions, FilterBar, DateRangeFilter } from '@/Components/FilterBar';
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/Components/ui/select';
 
 type SummaryRow = {
     date?: string;
@@ -196,15 +203,27 @@ export default function ReportsIndex() {
                             to={form.data.end_date}
                             onChange={({ from, to }) => form.setData({ start_date: from, end_date: to })}
                         />
-                        <SelectFilter
-                            label="Account"
-                            value={form.data.account_id || ''}
-                            onChange={(value) => form.setData('account_id', value ? Number(value) : '')}
-                            options={[
-                                { value: '', label: 'All accounts' },
-                                ...accounts.map((acc) => ({ value: acc.id, label: acc.name })),
-                            ]}
-                        />
+                        <div className="flex flex-col gap-1">
+                            <label className="text-sm font-medium text-foreground">Account</label>
+                            <Select
+                                value={form.data.account_id ? String(form.data.account_id) : ''}
+                                onValueChange={(value) =>
+                                    form.setData('account_id', value ? Number(value) : '')
+                                }
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="All accounts" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="">All accounts</SelectItem>
+                                    {accounts.map((acc) => (
+                                        <SelectItem key={acc.id} value={String(acc.id)}>
+                                            {acc.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
                     </FilterBar>
                 </form>
 
