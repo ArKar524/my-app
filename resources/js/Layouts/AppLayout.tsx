@@ -130,7 +130,7 @@ export default function AppLayout({ header, children }: AppLayoutProps) {
 
             <div className="flex w-full flex-col sm:pl-64">
                 <div className="sticky top-0 z-10 border-b border-border bg-card/90 backdrop-blur supports-[backdrop-filter]:backdrop-blur">
-                    <div className="flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
+                    <div className="flex h-14 sm:items-center justify-between px-4 sm:px-6 lg:px-8 md:justify-end">
                         <button
                             className="rounded-md p-2 text-muted-foreground hover:bg-muted sm:hidden"
                             onClick={() => setSidebarOpen(true)}
