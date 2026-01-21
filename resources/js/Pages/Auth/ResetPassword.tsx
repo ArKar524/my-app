@@ -2,7 +2,7 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
+import AuthLayout from '@/Layouts/AuthLayout';
 import { Head, useForm } from '@inertiajs/react';
 import type { FormEventHandler } from 'react';
 import type { PageProps } from '@/types';
@@ -35,7 +35,7 @@ export default function ResetPassword({
     };
 
     return (
-        <GuestLayout>
+        <AuthLayout>
             <Head title="Reset Password" />
 
             <form onSubmit={submit}>
@@ -102,6 +102,6 @@ export default function ResetPassword({
                     </PrimaryButton>
                 </div>
             </form>
-        </GuestLayout>
+        </AuthLayout>
     );
 }

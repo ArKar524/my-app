@@ -1,5 +1,5 @@
 import PrimaryButton from '@/Components/PrimaryButton';
-import GuestLayout from '@/Layouts/GuestLayout';
+import AuthLayout from '@/Layouts/AuthLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import type { FormEventHandler } from 'react';
 import type { PageProps } from '@/types';
@@ -16,7 +16,7 @@ export default function VerifyEmail({
     };
 
     return (
-        <GuestLayout>
+        <AuthLayout>
             <Head title="Email Verification" />
 
             <div className="mb-4 text-sm text-muted-foreground">
@@ -49,6 +49,6 @@ export default function VerifyEmail({
                     </Link>
                 </div>
             </form>
-        </GuestLayout>
+        </AuthLayout>
     );
 }

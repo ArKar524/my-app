@@ -1,4 +1,4 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AppLayout from '@/Layouts/AppLayout';
 import { Head } from '@inertiajs/react';
 import type { PageProps } from '@/types';
 import DeleteUserForm from './Partials/DeleteUserForm';
@@ -10,7 +10,7 @@ export default function Edit({
     status,
 }: PageProps<{ mustVerifyEmail: boolean; status?: string }>) {
     return (
-        <AuthenticatedLayout
+        <AppLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-foreground">
                     Profile
@@ -38,6 +38,6 @@ export default function Edit({
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AppLayout>
     );
 }

@@ -16,6 +16,7 @@ export type SharedProps = {
     flash?: {
         status?: string;
         message?: string;
+        type?: 'success' | 'error' | 'info' | 'warning';
     };
 };
 

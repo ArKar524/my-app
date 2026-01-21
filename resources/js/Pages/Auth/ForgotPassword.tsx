@@ -1,7 +1,7 @@
 import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
+import AuthLayout from '@/Layouts/AuthLayout';
 import { Head, useForm } from '@inertiajs/react';
 import type { FormEventHandler } from 'react';
 import type { PageProps } from '@/types';
@@ -22,7 +22,7 @@ export default function ForgotPassword({
     };
 
     return (
-        <GuestLayout>
+        <AuthLayout>
             <Head title="Forgot Password" />
 
             <div className="mb-4 text-sm text-muted-foreground">
@@ -56,6 +56,6 @@ export default function ForgotPassword({
                     </PrimaryButton>
                 </div>
             </form>
-        </GuestLayout>
+        </AuthLayout>
     );
 }

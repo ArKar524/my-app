@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "clsx": "^2.1.1",
+        "sonner": "^2.0.7",
         "tailwind-merge": "^3.4.0"
     }
 }
