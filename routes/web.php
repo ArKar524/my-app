@@ -27,6 +27,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->only(['index', 'store', 'update', 'destroy']);
     Route::resource('categories', \App\Http\Controllers\Finance\CategoryController::class)
         ->only(['index', 'store', 'update', 'destroy']);
+    Route::get('accounts/{account}/statement', [\App\Http\Controllers\Finance\AccountStatementController::class, 'show'])
+        ->name('accounts.statement');
     Route::resource('transactions', \App\Http\Controllers\Finance\TransactionController::class)
         ->only(['index', 'store', 'update', 'destroy']);
 });

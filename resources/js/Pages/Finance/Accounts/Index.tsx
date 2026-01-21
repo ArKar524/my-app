@@ -94,6 +94,12 @@ export default function AccountsIndex() {
                 render: (row) => (
                     <div className="flex justify-end gap-2">
                         <Button
+                            variant="secondary"
+                            onClick={() => router.get(route('accounts.statement', row.id))}
+                        >
+                            Statement
+                        </Button>
+                        <Button
                             variant="outline"
                             onClick={() => {
                                 setEditAccount(row);
