@@ -25,6 +25,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('accounts', \App\Http\Controllers\Finance\AccountController::class)
         ->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('categories', \App\Http\Controllers\Finance\CategoryController::class)
+        ->only(['index', 'store', 'update', 'destroy']);
 });
 
 require __DIR__.'/auth.php';
