@@ -11,10 +11,18 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->web(append: [
-            \App\Http\Middleware\HandleInertiaRequests::class,
-            \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
-        ]);
+        $middleware->web(
+            remove: [
+                \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
+            ],
+            // prepend: [
+            //     \App\Http\Middleware\VerifyCsrfToken::class,
+            // ],
+            append: [
+                \App\Http\Middleware\HandleInertiaRequests::class,
+                \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+            ],
+        );
 
         //
     })

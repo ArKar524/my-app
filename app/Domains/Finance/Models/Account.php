@@ -42,4 +42,9 @@ class Account extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'created_by');
     }
+
+    protected static function newFactory()
+    {
+        return \Database\Factories\AccountFactory::new();
+    }
 }

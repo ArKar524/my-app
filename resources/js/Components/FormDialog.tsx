@@ -5,7 +5,7 @@ import { Button } from '@/Components/ui/button';
 type FormDialogProps = {
     title: string;
     description?: string;
-    triggerLabel: string;
+    triggerLabel?: string;
     submitLabel?: string;
     cancelLabel?: string;
     children: ReactNode;
@@ -15,7 +15,7 @@ type FormDialogProps = {
     footerExtras?: ReactNode;
 };
 
-export function FormDialog({
+export default function FormDialog({
     title,
     description,
     triggerLabel,
@@ -37,9 +37,11 @@ export function FormDialog({
 
     return (
         <>
-            <Button type="button" onClick={() => handleOpenChange(true)}>
-                {triggerLabel}
-            </Button>
+            {triggerLabel !== undefined && (
+                <Button type="button" onClick={() => handleOpenChange(true)}>
+                    {triggerLabel}
+                </Button>
+            )}
             <DialogShell
                 open={open}
                 onOpenChange={handleOpenChange}
