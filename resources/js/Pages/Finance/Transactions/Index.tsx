@@ -12,6 +12,8 @@ import { Select } from '@/Components/ui/select';
 import { Badge } from '@/Components/ui/badge';
 import type { PageProps } from '@/types';
 import { useMemo, useState } from 'react';
+import { DatePicker } from '@/Components/ui/date-picker';
+import { format, parseISO } from 'date-fns';
 
 type AccountOption = { id: number; name: string };
 type CategoryOption = { id: number; name: string; type: 'income' | 'expense' };
@@ -261,6 +263,9 @@ function TransactionFormFields({
 }: FormFieldsProps) {
     const showToAccount = form.data.type === 'transfer';
     const showCategory = form.data.type !== 'transfer';
+    const selectedDate = form.data.occurred_at
+        ? parseISO(String(form.data.occurred_at))
+        : undefined;
 
     return (
         <div className="space-y-4">
@@ -366,11 +371,14 @@ function TransactionFormFields({
 
             <div className="space-y-1">
                 <Label htmlFor="occurred_at">Date</Label>
-                <Input
-                    id="occurred_at"
-                    type="date"
-                    value={form.data.occurred_at}
-                    onChange={(e) => form.setData('occurred_at', e.target.value)}
+                <DatePicker
+                    value={selectedDate}
+                    onChange={(date) =>
+                        form.setData(
+                            'occurred_at',
+                            date ? format(date, 'yyyy-MM-dd') : '',
+                        )
+                    }
                 />
                 {form.errors.occurred_at && (
                     <p className="text-sm text-destructive">
