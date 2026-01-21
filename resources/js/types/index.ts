@@ -18,6 +18,11 @@ export type SharedProps = {
         message?: string;
         type?: 'success' | 'error' | 'info' | 'warning';
     };
+    pagination?: {
+        page: number;
+        per_page: number;
+        total: number;
+    };
 };
 
 export type PageProps<
