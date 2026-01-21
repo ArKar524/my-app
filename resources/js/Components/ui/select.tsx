@@ -38,8 +38,9 @@ const SelectContent = React.forwardRef<
         searchable?: boolean;
         searchPlaceholder?: string;
     }
->(({ className, children, position = 'popper', searchable, searchPlaceholder = 'Search…', ...props }, ref) => {
+>(({ className, children, position = 'popper', searchable = true, searchPlaceholder = 'Search…', ...props }, ref) => {
     const [filter, setFilter] = React.useState('');
+    React.useEffect(() => setFilter(''), []);
 
     return (
         <SelectPrimitive.Portal>
@@ -57,17 +58,17 @@ const SelectContent = React.forwardRef<
                 <SelectPrimitive.ScrollUpButton className="flex h-8 cursor-default items-center justify-center bg-popover text-muted-foreground">
                     <ChevronUp className="h-4 w-4" />
                 </SelectPrimitive.ScrollUpButton>
-                {searchable && (
-                    <div className="p-2">
-                        <Input
-                            placeholder={searchPlaceholder}
-                            value={filter}
-                            onChange={(e) => setFilter(e.target.value)}
-                            className="h-9"
-                        />
-                    </div>
-                )}
-                <SelectFilterContext.Provider value={filter}>
+                <SelectFilterContext.Provider value={searchable ? filter : ''}>
+                    {searchable && (
+                        <div className="border-b border-border bg-popover p-2">
+                            <Input
+                                placeholder={searchPlaceholder}
+                                value={filter}
+                                onChange={(e) => setFilter(e.target.value)}
+                                className="h-9"
+                            />
+                        </div>
+                    )}
                     <SelectPrimitive.Viewport
                         className={cn(
                             'max-h-60 overflow-y-auto p-1',
