@@ -193,8 +193,7 @@ export default function AccountsIndex() {
             </div>
 
             <FormDialog
-                title="New account"
-                triggerLabel=""
+                title="New account" 
                 submitLabel="Create"
                 cancelLabel="Cancel"
                 onSubmit={submitCreate}
@@ -281,8 +280,7 @@ export default function AccountsIndex() {
             </FormDialog>
 
             <FormDialog
-                title="Edit account"
-                triggerLabel=""
+                title="Edit account" 
                 submitLabel="Save changes"
                 cancelLabel="Cancel"
                 onSubmit={submitEdit}
