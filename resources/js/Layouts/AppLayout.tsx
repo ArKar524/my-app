@@ -1,11 +1,10 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
-import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { FlashToaster } from '@/Components/FlashToaster';
 import { Link, usePage } from '@inertiajs/react';
 import { useMemo, useState, type PropsWithChildren, type ReactNode } from 'react';
 import type { PageProps } from '@/types';
+import { cn } from '@/lib/utils';
 
 type AppLayoutProps = PropsWithChildren<{
     header?: ReactNode;
@@ -31,8 +30,7 @@ export default function AppLayout({ header, children }: AppLayoutProps) {
     const { auth } = usePage<PageProps>().props;
     const user = auth.user;
 
-    const [showingNavigationDropdown, setShowingNavigationDropdown] =
-        useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const navLinks = useMemo(() => {
         const router = route();
@@ -53,182 +51,149 @@ export default function AppLayout({ header, children }: AppLayoutProps) {
     }
 
     return (
-        <div className="min-h-screen bg-muted text-foreground">
+        <div className="flex min-h-screen bg-muted text-foreground">
             <FlashToaster />
-            <nav className="border-b border-border bg-card">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-16 justify-between">
-                        <div className="flex items-center gap-6">
-                            <div className="flex shrink-0 items-center">
-                                <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-primary" />
-                                </Link>
-                            </div>
 
-                            <div className="hidden items-center space-x-2 sm:flex">
-                                {navLinks.map((item) => (
-                                    <NavLink
-                                        key={item.routeName}
-                                        href={item.href}
-                                        active={item.active}
-                                        className={
-                                            item.disabled
-                                                ? 'pointer-events-none opacity-50'
-                                                : ''
-                                        }
-                                    >
-                                        {item.label}
-                                    </NavLink>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="hidden sm:ms-6 sm:flex sm:items-center">
-                            <div className="relative ms-3">
-                                <Dropdown>
-                                    <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center rounded-md border border-transparent bg-card px-3 py-2 text-sm font-medium leading-4 text-muted-foreground transition duration-150 ease-in-out hover:text-foreground focus:outline-none"
-                                            >
-                                                {user.name}
-
-                                                <svg
-                                                    className="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </Dropdown.Trigger>
-
-                                    <Dropdown.Content>
-                                        <Dropdown.Link
-                                            href={route('profile.edit')}
-                                        >
-                                            Profile
-                                        </Dropdown.Link>
-                                        <Dropdown.Link
-                                            href={route('logout')}
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
-                            </div>
-                        </div>
-
-                        <div className="-me-2 flex items-center sm:hidden">
-                            <button
-                                onClick={() =>
-                                    setShowingNavigationDropdown(
-                                        (previousState) => !previousState,
-                                    )
-                                }
-                                className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground transition duration-150 ease-in-out hover:bg-muted hover:text-foreground focus:bg-muted focus:text-foreground focus:outline-none"
-                            >
-                                <svg
-                                    className="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
+            {/* Sidebar */}
+            <aside
+                className={cn(
+                    'fixed inset-y-0 left-0 z-30 w-64 transform border-r border-border bg-card shadow-sm transition-transform duration-200',
+                    sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+                    'sm:translate-x-0',
+                )}
+            >
+                <div className="flex h-16 items-center justify-between px-4">
+                    <Link href="/" className="flex items-center gap-2">
+                        <ApplicationLogo className="h-9 w-auto fill-current text-primary" />
+                        <span className="text-base font-semibold text-foreground">
+                            Ledger
+                        </span>
+                    </Link>
+                    <button
+                        className="rounded-md p-2 text-muted-foreground hover:bg-muted sm:hidden"
+                        onClick={() => setSidebarOpen(false)}
+                    >
+                        <span className="sr-only">Close menu</span>
+                        <svg
+                            className="h-5 w-5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <div className="px-3 pb-6">
+                    <div className="space-y-1">
+                        {navLinks.map((item) => {
+                            const classes = cn(
+                                'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition',
+                                item.active
+                                    ? 'bg-primary/10 text-foreground'
+                                    : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                                item.disabled && 'pointer-events-none opacity-50',
+                            );
+                            return (
+                                <Link
+                                    key={item.routeName}
+                                    href={item.href}
+                                    className={classes}
+                                    onClick={() => setSidebarOpen(false)}
                                 >
-                                    <path
-                                        className={
-                                            !showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={
-                                            showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
+                                    {item.label}
+                                </Link>
+                            );
+                        })}
                     </div>
                 </div>
+            </aside>
 
+            {/* Overlay for mobile */}
+            {sidebarOpen && (
                 <div
-                    className={
-                        (showingNavigationDropdown ? 'block' : 'hidden') +
-                        ' sm:hidden'
-                    }
-                >
-                    <div className="space-y-1 pb-3 pt-2">
-                        {navLinks.map((item) => (
-                            <ResponsiveNavLink
-                                key={item.routeName}
-                                href={item.href}
-                                active={item.active}
-                                className={
-                                    item.disabled
-                                        ? 'pointer-events-none opacity-50'
-                                        : ''
-                                }
-                            >
-                                {item.label}
-                            </ResponsiveNavLink>
-                        ))}
-                    </div>
-
-                    <div className="border-t border-border pb-1 pt-4">
-                        <div className="px-4">
-                            <div className="text-base font-medium text-foreground">
-                                {user.name}
-                            </div>
-                            <div className="text-sm font-medium text-muted-foreground">
-                                {user.email}
-                            </div>
-                        </div>
-
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>
-                                Profile
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                method="post"
-                                href={route('logout')}
-                                as="button"
-                            >
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            {header && (
-                <header className="bg-card text-foreground shadow">
-                    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                        {header}
-                    </div>
-                </header>
+                    className="fixed inset-0 z-20 bg-black/40 sm:hidden"
+                    onClick={() => setSidebarOpen(false)}
+                />
             )}
 
-            <main>{children}</main>
+            <div className="flex w-full flex-col sm:pl-64">
+                <div className="sticky top-0 z-10 border-b border-border bg-card/80 backdrop-blur">
+                    <div className="flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
+                        <button
+                            className="rounded-md p-2 text-muted-foreground hover:bg-muted sm:hidden"
+                            onClick={() => setSidebarOpen(true)}
+                        >
+                            <span className="sr-only">Open menu</span>
+                            <svg
+                                className="h-5 w-5"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <line x1="3" y1="12" x2="21" y2="12" />
+                                <line x1="3" y1="6" x2="21" y2="6" />
+                                <line x1="3" y1="18" x2="21" y2="18" />
+                            </svg>
+                        </button>
+
+                        <div className="flex items-center gap-3">
+                            <Dropdown>
+                                <Dropdown.Trigger>
+                                    <span className="inline-flex rounded-md">
+                                        <button
+                                            type="button"
+                                            className="inline-flex items-center rounded-md border border-transparent bg-card px-3 py-2 text-sm font-medium leading-4 text-muted-foreground transition duration-150 ease-in-out hover:text-foreground focus:outline-none"
+                                        >
+                                            {user.name}
+                                            <svg
+                                                className="-me-0.5 ms-2 h-4 w-4"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20"
+                                                fill="currentColor"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                    clipRule="evenodd"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </span>
+                                </Dropdown.Trigger>
+
+                                <Dropdown.Content>
+                                    <Dropdown.Link href={route('profile.edit')}>
+                                        Profile
+                                    </Dropdown.Link>
+                                    <Dropdown.Link
+                                        href={route('logout')}
+                                        method="post"
+                                        as="button"
+                                    >
+                                        Log Out
+                                    </Dropdown.Link>
+                                </Dropdown.Content>
+                            </Dropdown>
+                        </div>
+                    </div>
+                </div>
+
+                {header && (
+                    <header className="border-b border-border bg-card text-foreground">
+                        <div className="px-4 py-4 sm:px-6 lg:px-8">{header}</div>
+                    </header>
+                )}
+
+                <main className="flex-1">{children}</main>
+            </div>
         </div>
     );
 }
