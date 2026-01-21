@@ -8,7 +8,13 @@ import DataTable, {
 import FormDialog from '@/Components/FormDialog';
 import { Label } from '@/Components/ui/label';
 import { Input } from '@/Components/ui/input';
-import { Select } from '@/Components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/Components/ui/select';
 import { Badge } from '@/Components/ui/badge';
 import type { PageProps } from '@/types';
 import { useMemo, useState } from 'react';
@@ -178,17 +184,21 @@ export default function CategoriesIndex() {
                     <div className="space-y-1">
                         <Label htmlFor="type">Type</Label>
                         <Select
-                            id="type"
                             value={createForm.data.type}
-                            onChange={(e) =>
-                                createForm.setData('type', e.target.value as Category['type'])
+                            onValueChange={(value) =>
+                                createForm.setData('type', value as Category['type'])
                             }
                         >
-                            {CATEGORY_TYPES.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
+                            <SelectTrigger id="type">
+                                <SelectValue placeholder="Select type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {CATEGORY_TYPES.map((option) => (
+                                    <SelectItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
                         </Select>
                         {createForm.errors.type && (
                             <p className="text-sm text-destructive">{createForm.errors.type}</p>
@@ -221,17 +231,21 @@ export default function CategoriesIndex() {
                     <div className="space-y-1">
                         <Label htmlFor="edit-type">Type</Label>
                         <Select
-                            id="edit-type"
                             value={editForm.data.type}
-                            onChange={(e) =>
-                                editForm.setData('type', e.target.value as Category['type'])
+                            onValueChange={(value) =>
+                                editForm.setData('type', value as Category['type'])
                             }
                         >
-                            {CATEGORY_TYPES.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
+                            <SelectTrigger id="edit-type">
+                                <SelectValue placeholder="Select type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {CATEGORY_TYPES.map((option) => (
+                                    <SelectItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
                         </Select>
                         {editForm.errors.type && (
                             <p className="text-sm text-destructive">{editForm.errors.type}</p>

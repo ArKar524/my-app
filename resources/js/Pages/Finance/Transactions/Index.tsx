@@ -8,7 +8,13 @@ import DataTable, {
 import FormDialog from '@/Components/FormDialog';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
-import { Select } from '@/Components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/Components/ui/select';
 import { Badge } from '@/Components/ui/badge';
 import type { PageProps } from '@/types';
 import { useMemo, useState } from 'react';
@@ -272,15 +278,19 @@ function TransactionFormFields({
             <div className="space-y-1">
                 <Label htmlFor="type">Type</Label>
                 <Select
-                    id="type"
                     value={form.data.type}
-                    onChange={(e) => form.setData('type', e.target.value)}
+                    onValueChange={(value) => form.setData('type', value)}
                 >
-                    {transactionTypes.map((type) => (
-                        <option key={type} value={type}>
-                            {type}
-                        </option>
-                    ))}
+                    <SelectTrigger id="type">
+                        <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {transactionTypes.map((type) => (
+                            <SelectItem key={type} value={type}>
+                                {type}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
                 </Select>
                 {form.errors.type && (
                     <p className="text-sm text-destructive">{form.errors.type}</p>
@@ -290,15 +300,21 @@ function TransactionFormFields({
             <div className="space-y-1">
                 <Label htmlFor="account_id">Account</Label>
                 <Select
-                    id="account_id"
-                    value={form.data.account_id}
-                    onChange={(e) => form.setData('account_id', Number(e.target.value))}
+                    value={String(form.data.account_id)}
+                    onValueChange={(value) =>
+                        form.setData('account_id', Number(value))
+                    }
                 >
-                    {accounts.map((acc) => (
-                        <option key={acc.id} value={acc.id}>
-                            {acc.name}
-                        </option>
-                    ))}
+                    <SelectTrigger id="account_id">
+                        <SelectValue placeholder="Select account" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {accounts.map((acc) => (
+                            <SelectItem key={acc.id} value={String(acc.id)}>
+                                {acc.name}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
                 </Select>
                 {form.errors.account_id && (
                     <p className="text-sm text-destructive">{form.errors.account_id}</p>
@@ -308,50 +324,56 @@ function TransactionFormFields({
             {showToAccount && (
                 <div className="space-y-1">
                     <Label htmlFor="to_account_id">To Account</Label>
-                    <Select
-                        id="to_account_id"
-                        value={form.data.to_account_id}
-                        onChange={(e) =>
-                            form.setData('to_account_id', Number(e.target.value))
-                        }
-                    >
-                        <option value="">Select account</option>
+                <Select
+                    value={form.data.to_account_id ? String(form.data.to_account_id) : ''}
+                    onValueChange={(value) =>
+                        form.setData('to_account_id', value ? Number(value) : '')
+                    }
+                >
+                    <SelectTrigger id="to_account_id">
+                        <SelectValue placeholder="Select account" />
+                    </SelectTrigger>
+                    <SelectContent>
                         {accounts.map((acc) => (
-                            <option key={acc.id} value={acc.id}>
+                            <SelectItem key={acc.id} value={String(acc.id)}>
                                 {acc.name}
-                            </option>
+                            </SelectItem>
                         ))}
-                    </Select>
-                    {form.errors.to_account_id && (
-                        <p className="text-sm text-destructive">
-                            {form.errors.to_account_id}
-                        </p>
-                    )}
+                    </SelectContent>
+                </Select>
+                {form.errors.to_account_id && (
+                    <p className="text-sm text-destructive">
+                        {form.errors.to_account_id}
+                    </p>
+                )}
                 </div>
             )}
 
             {showCategory && (
                 <div className="space-y-1">
                     <Label htmlFor="category_id">Category</Label>
-                    <Select
-                        id="category_id"
-                        value={form.data.category_id}
-                        onChange={(e) =>
-                            form.setData('category_id', Number(e.target.value))
-                        }
-                    >
-                        <option value="">Select category</option>
+                <Select
+                    value={form.data.category_id ? String(form.data.category_id) : ''}
+                    onValueChange={(value) =>
+                        form.setData('category_id', value ? Number(value) : '')
+                    }
+                >
+                    <SelectTrigger id="category_id">
+                        <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
                         {categoryOptionsFor(form.data.type).map((cat) => (
-                            <option key={cat.id} value={cat.id}>
+                            <SelectItem key={cat.id} value={String(cat.id)}>
                                 {cat.name}
-                            </option>
+                            </SelectItem>
                         ))}
-                    </Select>
-                    {form.errors.category_id && (
-                        <p className="text-sm text-destructive">
-                            {form.errors.category_id}
-                        </p>
-                    )}
+                    </SelectContent>
+                </Select>
+                {form.errors.category_id && (
+                    <p className="text-sm text-destructive">
+                        {form.errors.category_id}
+                    </p>
+                )}
                 </div>
             )}
 
